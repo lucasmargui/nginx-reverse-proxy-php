@@ -1,4 +1,4 @@
-# Reverse Proxy + PHP-FPM + Nginx Architecture
+# Nginx Reverse Proxy
 
 This document explains **why each container mounts the same project directory**, how **PHP-FPM and Nginx interact**, why **VIRTUAL_HOST** and **server_name** both exist even though they seem redundant, and an alternative way to route traffic to **external services** using a bridge container. The goal is to clarify the functioning of your architecture using `nginx-proxy` + multiple Nginx/PHP-FPM modules.
 
@@ -222,7 +222,31 @@ https://module1.main-domain-example.online/
 
 ---
 
-# 🎯 Final Conclusion
+
+# 🚀 Getting Started
+
+### 1. Clone the repository
+```bash
+git clone <repo-url>
+cd <repo-directory>
+```
+
+### 2. Start the stack
+```bash
+docker compose -f docker-compose-proxy.yml up -d
+docker compose -f docker-compose-apps.yml up -d
+```
+
+### 3. Configure test domains
+Update your OS hosts file with module domains.
+
+### 4. Test in browser
+- http://module1.main-domain-example.online
+- http://module2.main-domain-example.online
+- http://module1.main-domain-example.online/teste
+
+---
+
 - `VIRTUAL_HOST` → Proxy layer routing  
 - `server_name` → Internal Nginx config  
 - Bridge containers → Allow routing to **external services**, preserving subdomain structure
