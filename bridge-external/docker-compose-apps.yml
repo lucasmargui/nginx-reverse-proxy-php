@@ -9,7 +9,9 @@ services:
       - "4444:80"
     volumes:
       - ./api1:/var/www/html
+      - ./apache/apache.conf:/etc/apache2/sites-available/000-default.conf
     restart: always
+    command: bash -c "a2enmod rewrite && apache2-foreground"
 
   api2-php:
     image: php:8.2-apache
@@ -18,4 +20,6 @@ services:
       - "4445:80"
     volumes:
       - ./api2:/var/www/html
+      - ./apache/apache.conf:/etc/apache2/sites-available/000-default.conf
     restart: always
+    command: bash -c "a2enmod rewrite && apache2-foreground"
