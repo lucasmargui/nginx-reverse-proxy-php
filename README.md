@@ -2,6 +2,9 @@
 
 This document explains **why each container mounts the same project directory**, how **PHP-FPM and Nginx interact**, why **VIRTUAL_HOST** and **server_name** both exist even though they seem redundant, and an alternative way to route traffic to **external services** using a bridge container. The goal is to clarify the functioning of your architecture using `nginx-proxy` + multiple Nginx/PHP-FPM modules.
 
+<img width="1472" height="739" alt="image" src="https://github.com/user-attachments/assets/d1afa363-6081-4e45-8f32-5deb471a162f" />
+
+
 ---
 
 # 🔍 Detailed Explanation: Why Both Containers Share the Same Volume
