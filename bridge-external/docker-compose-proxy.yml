@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy
+    restart: always
+
+  api1-bridge:
+    image: nginx:alpine
+    container_name: api1-bridge
+    networks:
+      - proxy
+    volumes:
+      - ./nginx/api1.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      - VIRTUAL_HOST=module1.main-domain-example.online
+      - VIRTUAL_PORT=80
+    restart: always
+
+  api2-bridge:
+    image: nginx:alpine
+    container_name: api2-bridge
+    networks:
+      - proxy
+    volumes:
+      - ./nginx/api2.conf:/etc/nginx/conf.d/default.conf
+    environment:
+      - VIRTUAL_HOST=module2.main-domain-example.online
+      - VIRTUAL_PORT=80
+    restart: always
+
+networks:
+  proxy:
+    driver: bridge

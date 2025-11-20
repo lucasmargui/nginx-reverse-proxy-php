@@ -1,0 +1,21 @@
+# docker-compose.apps.yml
+version: '3'
+
+services:
+  api1-php:
+    image: php:8.2-apache
+    container_name: api1-php
+    ports:
+      - "4444:80"
+    volumes:
+      - ./api1:/var/www/html
+    restart: always
+
+  api2-php:
+    image: php:8.2-apache
+    container_name: api2-php
+    ports:
+      - "4445:80"
+    volumes:
+      - ./api2:/var/www/html
+    restart: always

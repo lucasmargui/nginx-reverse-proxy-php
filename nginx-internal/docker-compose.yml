@@ -1,0 +1,108 @@
+version: "3.9"
+
+networks:
+  webnet:
+    driver: bridge
+
+services:
+
+  ########################################
+  # Nginx Proxy Dinâmico (Load Balancer)
+  ########################################
+  nginx-proxy:
+    image: jwilder/nginx-proxy:latest
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certificates:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - webnet
+    depends_on:
+      - module1-nginx
+      - module2-nginx
+      - module3-nginx
+
+
+  ########################################
+  # MODULE 1 (PHP-FPM + NGINX)
+  ########################################
+
+  module1-php:
+    image: php:8.2-fpm
+    restart: always
+    volumes:
+      - ./example-module1:/var/www/html
+    networks:
+      - webnet
+
+  module1-nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./example-module1:/var/www/html
+      - ./nginx/module1.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - webnet
+    environment:
+      - VIRTUAL_HOST=module1.main-domain-example.online
+      - VIRTUAL_PORT=80
+    depends_on:
+      - module1-php
+
+
+  ########################################
+  # MODULE 2 (PHP-FPM + NGINX)
+  ########################################
+
+  module2-php:
+    image: php:8.2-fpm
+    restart: always
+    volumes:
+      - ./example-module2:/var/www/html
+    networks:
+      - webnet
+
+  module2-nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./example-module2:/var/www/html
+      - ./nginx/module2.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - webnet
+    environment:
+      - VIRTUAL_HOST=module2.main-domain-example.online
+      - VIRTUAL_PORT=80
+    depends_on:
+      - module2-php
+
+
+  ########################################
+  # MODULE 3 (PHP-FPM + NGINX)
+  ########################################
+
+  module3-php:
+    image: php:8.2-fpm
+    restart: always
+    volumes:
+      - ./example-module3:/var/www/html
+    networks:
+      - webnet
+
+  module3-nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./example-module3:/var/www/html
+      - ./nginx/module3.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - webnet
+    environment:
+      - VIRTUAL_HOST=module3.main-domain-example.online
+      - VIRTUAL_PORT=80
+    depends_on:
+      - module3-php
